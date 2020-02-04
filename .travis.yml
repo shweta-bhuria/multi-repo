@@ -1,0 +1,23 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t shwetabhuria/react-test -f ./client/dockerfile.dev .
+  
+script:
+  - docker run shwetabhuria/react-test npm test -- --coverage
+  
+after_success:
+  - docker build -t shwetabhuria/multi-client ./client
+  - docker build -t shwetabhuria/multi-nginx ./nginx
+  - docker build -t shwetabhuria/multi-server ./server
+  - docker build -t shwetabhuria/multi-worker ./worker
+  # Log in to docker CLI
+  - echo "$DOCKER_PWD" | docker login -u "$DOCKER_ID" --password-stdin
+  #Take those images and push into docker hub
+  - docker push shwetabhuria/multi-client
+  - docker push shwetabhuria/multi-nginx
+  - docker push shwetabhuria/multi-server
+  - docker push shwetabhuria/multi-worker
+  

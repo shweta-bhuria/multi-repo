@@ -22,3 +22,14 @@ after_success:
   - docker push shwetabhuria/multi-server
   - docker push shwetabhuria/multi-worker
   
+Deploy:
+  provider: elasticbeanstalk
+  region: us-east-1
+  app: multi-docker
+  env: MultiDocker-env
+  bucket_name : elasticbeanstalk-us-east-1-874126808951
+  bucket_path: docker-multi
+  on:
+    branch:master
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY  
